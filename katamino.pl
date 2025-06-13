@@ -19,14 +19,17 @@ sublista(Desc2,Tomar2,L2,R2) :-
 
 %Ej:sublista(2,3,[a,b,c,d,e,f],R).
 
-%tablero(+K, -T)
-tablero(Tfila,Matriz) :- 
- append([],_,MatrizFila),
- length(MatrizFila,Tfila), repetir(MatrizFila,5,Matriz).
+% tablero(+K, -T)
+tablero(K, T) :- generar_filas(5, K, T).
 
-%repetir(+Elem,+Cantidad,-ListaCopia) %concatena
-repetir(_,0,[]).
-repetir(Elem,Cantidad,[Elem|ListaCopia]) :- Resta is Cantidad-1, repetir(Elem,Resta,ListaCopia).
+% generar_filas(+Filas, +Columnas, -Tablero)
+generar_filas(0, _, []).
+generar_filas(N, K, [Fila|Resto]) :-
+    N > 0,
+    length(Fila, K), 
+    N1 is N - 1,
+    generar_filas(N1, K, Resto).
+
 
 %tamano(+M, -F, -C)
 tamano([E|M], F, C) :- length(E,F), length([E|M],C).
