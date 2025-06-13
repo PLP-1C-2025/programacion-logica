@@ -4,8 +4,6 @@
 %insertar(?x,+L,?Lx).
 insertar(X,L,Lx) :- append(P,S,L), append(P,[X|S],Lx).
 
-
-
 %sublista(+Descartar, +Tomar, +L, -R).
 %sublista(_,_,[],[]).
 sublista(Desc2,Tomar2,L2,R2) :- 
@@ -22,7 +20,7 @@ sublista(Desc2,Tomar2,L2,R2) :-
 % tablero(+K, -T)
 tablero(K, T) :- generar_filas(5, K, T).
 
-% generar_filas(+Filas, +Columnas, -Tablero)
+%generar_filas(+Filas, +Columnas, -Tablero)
 generar_filas(0, _, []).
 generar_filas(N, K, [Fila|Resto]) :-
     N > 0,
@@ -52,8 +50,8 @@ P1 =
 %coordenadas(+T, -IJ)
 coordenadas([[T|F]|TS], (NEWI,NEWJ)) :- length([T|F],I), 
                                   length([[T|F]|TS],J),
-                                  between(1, NEWI, I),
-                                  between(1, NEWJ, J).
+                                  between(1, I, NEWI),
+                                  between(1, J, NEWJ).
 
 /*Predicados: =, sort, msort, length, nth1, nth0, member, append, last,
  between, is_list, list_to_set, is_set, union, intersection, subset, subtract, select, delete, reverse, atom, number, numlist, sum_list, flatten
