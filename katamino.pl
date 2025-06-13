@@ -48,20 +48,24 @@ coordenadas([[T|F]|TS], (I,J)) :- length([T|F],I),
 
 /*Predicados: =, sort, msort, length, nth1, nth0, member, append, last,
  between, is_list, list_to_set, is_set, union, intersection, subset, subtract, select, delete, reverse, atom, number, numlist, sum_list, flatten
- */
 
 kPiezas(K, PS) :- .
 %quiero todos los subconjuntos del conjunto de longitud k, todas las permutaciones distintas de longitud k
 %kpiezas(+K, -PS)
 piezas(K,PS) :- 
+ */
 
 /*
 nombrePiezas(L), length(PS,K), append([A],L1,L),
                 not(member(A, L1)), member(A,PS).
 
 piezas(K,PS) :- append (Algo,_,ListaK), length (ListaK, K), [a, b, c, d, e, f, g, h, i, j, k, l] 
-*/
 length(PS,K),
+*/
+
+combinar(0, _, []).
+combinar(K, [X|XS], [X|YS]) :- K > 0, NEWK is K-1, combinar(NEWK, XS, YS). % En este si
+combinar(K, [_|XS], YS) :- K > 0, combinar(K, XS, YS). % Este es el caso en el que no agarro nada
 
 memberAll([], YS).
 memberAll([X|XS], YS) :- member(X,YS), memberAll(XS,YS).
@@ -69,16 +73,4 @@ memberAll([X|XS], YS) :- member(X,YS), memberAll(XS,YS).
 distinctAll([]).
 distinctAll([P|PS]) :- not(member(P,PS)), distinctAll(PS).
 
-piezas(K,PS) :- nombrePiezas(L), length(PS,K), memberAll(PS, L), distinctAll(PS).
-
-
-% (a)
-
-/*
-permutacion([], []).
-permutacion([X|XS], [X|YS]) :- permutacion(XS, YS), !.
-permutacion([X|XS], [Y|YS]) :- X=Y, YS = [], append(YS, [Y], YSY), permutacion([X|XS], YSY).
-
-*/
-
-
+kPiezas(K,PS) :- nombrePiezas(L), combinar(K, L, PS).
