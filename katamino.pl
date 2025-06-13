@@ -49,8 +49,8 @@ P1 =
 
 coordenadas([[T|F]|TS], (I,J)) :- length([T|F],I), 
                                   length([[T|F]|TS],J),
-                                  between(1, NEWI, J),
-                                  between(1, NEWJ, I).
+                                  between(1, NEWI, I),
+                                  between(1, NEWJ, J).
 
 /*Predicados: =, sort, msort, length, nth1, nth0, member, append, last,
  between, is_list, list_to_set, is_set, union, intersection, subset, subtract, select, delete, reverse, atom, number, numlist, sum_list, flatten
