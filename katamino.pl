@@ -67,10 +67,6 @@ combinar(0, _, []).
 combinar(K, [X|XS], [X|YS]) :- K > 0, NEWK is K-1, combinar(NEWK, XS, YS). % En este si
 combinar(K, [_|XS], YS) :- K > 0, combinar(K, XS, YS). % Este es el caso en el que no agarro nada
 
-memberAll([], YS).
-memberAll([X|XS], YS) :- member(X,YS), memberAll(XS,YS).
 
-distinctAll([]).
-distinctAll([P|PS]) :- not(member(P,PS)), distinctAll(PS).
 
 kPiezas(K,PS) :- nombrePiezas(L), combinar(K, L, PS).
