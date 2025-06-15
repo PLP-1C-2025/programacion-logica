@@ -67,6 +67,14 @@ combinar(0, _, []).
 combinar(K, [X|XS], [X|YS]) :- K > 0, NEWK is K-1, combinar(NEWK, XS, YS). % En este si
 combinar(K, [_|XS], YS) :- K > 0, combinar(K, XS, YS). % Este es el caso en el que no agarro nada
 
-
-
 kPiezas(K,PS) :- nombrePiezas(L), combinar(K, L, PS).
+
+%seccionTablero(+T, +ALTO, +ANCHO, +IJ, ?ST)
+
+seccionTablero(T, ALTO, ANCHO, (I,J), ST) :- NEWI is I - 1, NEWJ is J - 1,
+                                             sublista(NEWI, ALTO, T, R), columnasValidas(NEWJ, ANCHO, R, SOLUCION), ST = SOLUCION.
+
+columnasValidas(_, _, [], []).
+columnasValidas(J, ANCHO, [F|R], SOLUCION) :- sublista(J, ANCHO, F, FRES), 
+                                               append([FRES], RF, SOLUCION), 
+                                               columnasValidas(J,ANCHO,R,RF).
