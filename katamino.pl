@@ -78,3 +78,6 @@ columnasValidas(_, _, [], []).
 columnasValidas(J, ANCHO, [F|R], SOLUCION) :- sublista(J, ANCHO, F, FRES), 
                                                append([FRES], RF, SOLUCION), 
                                                columnasValidas(J,ANCHO,R,RF).
+
+%ubicarPieza(+Tablero, +Identificador)
+ubicarPieza(Tablero, Identificador) :- tablero(3, T), pieza(e, E), tamano(E, F, C),coordenadas(T,(X,Y)), seccionTablero(T, F, C, (X,Y), E).
