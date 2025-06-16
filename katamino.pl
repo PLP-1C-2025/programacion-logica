@@ -90,6 +90,7 @@ ubicarPieza(Tablero, Identificador) :- pieza(Identificador, E), tamano(E, F, C),
 
 %poda(+P, +T)
 poda(sinPoda, _).
+poda(podaMod5, T) :- todosGruposLibresModulo5(T).
 
 %ubicarPiezas(+Tablero, +Poda, +Identificadores)
 ubicarPiezas(_, _, []).
@@ -110,3 +111,18 @@ length(TS, N).
 % time(cantSoluciones(sinPoda, 4, N)).
 % 2,350,843,172 inferences, 145.134 CPU in 145.124 seconds (100% CPU, 16197786 Lips)
 % N = 200.
+
+%todosGruposLibresModulo5(+T)
+%todosGruposLibresModulo5(+T) :-
+
+%recuperarLibre(T,ST) :- coordenadas(T,(X,Y)), LS is coordenadas(T,(X1,Y1)),findall(LS,cordLibre(T,(X,Y)),ST).
+%señora find all no anda
+
+
+
+
+recuperarLibre(T,ST) :- LS = coordenadas(T,(X,Y)), findall(LS,cordLibre(T,(X,Y)),ST).
+
+
+%cordLibre(+T,+(I,J))
+cordLibre(T,(I,J)) :-  seccionTablero(T,1,1,(I,J),[[Valor]]), var(Valor).
