@@ -88,5 +88,12 @@ columnasValidas(J, ANCHO, [F|R], SOLUCION) :- sublista(J, ANCHO, F, FRES),
 %ubicarPieza(+Tablero, +Identificador)
 ubicarPieza(Tablero, Identificador) :- pieza(Identificador, E), tamano(E, F, C),coordenadas(Tablero,(X,Y)), seccionTablero(Tablero, F, C, (X,Y), E).
 
+%poda(+P, +T)
+poda(sinPoda, _).
+
 %ubicarPiezas(+Tablero, +Poda, +Identificadores)
-ubicarPiezas(Tablero, Poda, Identificadores):-
+ubicarPiezas(_, _, []).
+ubicarPiezas(Tablero, Poda, [I|Identificadores]) :- poda(Poda, Tablero), ubicarPieza(Tablero,I), ubicarPiezas(Tablero, Poda, Identificadores).
+
+%llenarTablero(+Poda, +Columnas, -Tablero)
+llenarTablero(Poda, Columnas, Tablero) :- tablero(Columnas, Tablero), kPiezas(Columnas, PiezasPosibles), ubicarPiezas(Tablero, Poda, PiezasPosibles).
