@@ -38,9 +38,15 @@ tamano([E|M], F, C) :- length(E,C), length([E|M],F).
 % (3,1) (3,2) (3,3) (3,4)
 % (4,1) (4,2) (4,3) (4,4)
 % (5,1) (5,2) (5,3) (5,4)
-
+/*
 coordenadas([[T|F]|TS], (I,J)) :- length([T|F],I), 
                                   length([[T|F]|TS],J),
+                                  between(1, NEWI, I),
+                                  between(1, NEWJ, J).
+*/
+%coordenadas(+Tablero, -Coordenada)
+coordenadas([[T|F]|TS], (I, J)) :-length([[T|F]|TS], NEWI),
+                                  length([T|F], NEWJ),
                                   between(1, NEWI, I),
                                   between(1, NEWJ, J).
 
@@ -80,4 +86,7 @@ columnasValidas(J, ANCHO, [F|R], SOLUCION) :- sublista(J, ANCHO, F, FRES),
                                                columnasValidas(J,ANCHO,R,RF).
 
 %ubicarPieza(+Tablero, +Identificador)
-ubicarPieza(Tablero, Identificador) :- tablero(3, T), pieza(e, E), tamano(E, F, C),coordenadas(T,(X,Y)), seccionTablero(T, F, C, (X,Y), E).
+ubicarPieza(Tablero, Identificador) :- pieza(Identificador, E), tamano(E, F, C),coordenadas(Tablero,(X,Y)), seccionTablero(Tablero, F, C, (X,Y), E).
+
+%ubicarPiezas(+Tablero, +Poda, +Identificadores)
+ubicarPiezas(Tablero, Poda, Identificadores):-
