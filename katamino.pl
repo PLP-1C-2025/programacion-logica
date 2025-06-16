@@ -97,3 +97,16 @@ ubicarPiezas(Tablero, Poda, [I|Identificadores]) :- poda(Poda, Tablero), ubicarP
 
 %llenarTablero(+Poda, +Columnas, -Tablero)
 llenarTablero(Poda, Columnas, Tablero) :- tablero(Columnas, Tablero), kPiezas(Columnas, PiezasPosibles), ubicarPiezas(Tablero, Poda, PiezasPosibles).
+
+cantSoluciones(Poda, Columnas, N) :-
+findall(T, llenarTablero(Poda, Columnas, T), TS),
+length(TS, N).
+
+% MAQUINA VIRTUAL
+% time(cantSoluciones(sinPoda, 3, N)).
+% 53,325,481 inferences, 3.217 CPU in 3.221 seconds (100% CPU, 16575187 Lips)
+% N = 28.
+
+% time(cantSoluciones(sinPoda, 4, N)).
+% 2,350,843,172 inferences, 145.134 CPU in 145.124 seconds (100% CPU, 16197786 Lips)
+% N = 200.
