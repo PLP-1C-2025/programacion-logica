@@ -113,16 +113,21 @@ length(TS, N).
 % N = 200.
 
 %todosGruposLibresModulo5(+T)
-%todosGruposLibresModulo5(+T) :-
+%todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), not((member(X,G), length(X,L), mod(L, 5) \= 0)).
+todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), forall(member(X,G), moduloCinco(X)). % A REVISAR
 
-%recuperarLibre(T,ST) :- coordenadas(T,(X,Y)), LS is coordenadas(T,(X1,Y1)),findall(LS,cordLibre(T,(X,Y)),ST).
-%señora find all no anda
+moduloCinco(X) :- length(X,L), mod(L, 5) =:= 0.
 
+% MAQUINA VIRTUAL
+% ?- time(cantSoluciones(podaMod5, 3, N)).
+% 30,298,534 inferences, 1.839 CPU in 1.826 seconds (101% CPU, 16479418 Lips)  -- 101 CPU!?!?!?!?!?!?!?!?!?!
+% N = 28.
 
+% ?- time(cantSoluciones(podaMod5, 4, N)).
+% 696,978,975 inferences, 44.081 CPU in 44.207 seconds (100% CPU, 15811206 Lips)
+% N = 200.
 
-
-recuperarLibre(T,ST) :- LS = coordenadas(T,(X,Y)), findall(LS,cordLibre(T,(X,Y)),ST).
-
+recuperarLibre(T,ST) :- findall((X,Y),cordLibre(T,(X,Y)),ST).
 
 %cordLibre(+T,+(I,J))
-cordLibre(T,(I,J)) :-  seccionTablero(T,1,1,(I,J),[[Valor]]), var(Valor).
+cordLibre(T,(I,J)) :- coordenadas(T, (I,J)), seccionTablero(T,1,1,(I,J),[[Valor]]), var(Valor).
