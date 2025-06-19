@@ -79,6 +79,7 @@ cantSoluciones(Poda, Columnas, N) :- findall(T, llenarTablero(Poda, Columnas, T)
 %todosGruposLibresModulo5(+T)
 todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), forall(member(Lista,G), moduloCinco(Lista)). % A REVISAR
 
+%moduloCinco(+Lista)
 moduloCinco(Lista) :- length(Lista, Ls), mod(Ls, 5) =:= 0.
 
 % MAQUINA VIRTUAL
@@ -90,6 +91,7 @@ moduloCinco(Lista) :- length(Lista, Ls), mod(Ls, 5) =:= 0.
 % 696,978,975 inferences, 44.081 CPU in 44.207 seconds (100% CPU, 15811206 Lips)
 % N = 200.
 
+%recuperarLibre(+T,-ST)
 recuperarLibre(T,ST) :- findall((X,Y),cordLibre(T,(X,Y)),ST).
 
 %cordLibre(+T,?(I,J))
@@ -126,3 +128,11 @@ test4 :-    tablero(3, T), (coordenadas(T, Coord1), Coord1 = (1,1)),
             coordenadas(T, (2,2)), 
             coordenadas(T, (5,2)),
             coordenadas(T, (4,3)). 
+
+
+test5 :-    kPiezas(2, [a,b]),
+            kPiezas(1, [b]),
+            kPiezas(2, [c,d]),
+            kPiezas(5, [a,b,c,d,e]),
+            kPiezas(1, [e]),
+            (kPiezas(1, Piezas), Piezas = [a]).
