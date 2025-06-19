@@ -94,3 +94,14 @@ recuperarLibre(T,ST) :- findall((X,Y),cordLibre(T,(X,Y)),ST).
 
 %cordLibre(+T,?(I,J))
 cordLibre(T, Coord) :- coordenadas(T, Coord), seccionTablero(T, 1, 1, Coord, [[Valor]]), var(Valor).
+
+
+tests :- test1.
+
+test1 :-    sublista(0, 0, [1], R1), R1 = [], 
+            sublista(0, 0, [1,2,3], R2), R2 = [], 
+            sublista(0, 0, [], R3), R3 = [], 
+            sublista(1, 1, [1,2], R4), R4 = [2],
+            sublista(0, 2, [1,2], R5), R5 = [1,2],
+            sublista(2, 0, [1,2], R6), R6 = [],
+            sublista(2, 2, [1,2,3,4], R7), R7 = [3,4]. 
