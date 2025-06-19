@@ -15,7 +15,21 @@ sublista(Desc2,Tomar2,L2,R2) :-
  append(R2,_,Ele2), 
  length(R2,Tomar2).
 
-%Ej:sublista(2,3,[a,b,c,d,e,f],R).
+/*
+%sublista(+Descartar, +Tomar, +L, -R).
+sublista(Descartar, Tomar, L, R) :- verificarSubLista(L, Descartar, ElemsPosibles), 
+                                    verificarSubLista(ElemsPosibles, Tomar, R).
+verificarSubLista(L, N, R) :-
+*/
+
+/*
+Es reversible, sigue logrando unificar correctamente si se cambia que variable es instanciada entre Descartar y R.
+Para hacer sublista, usamos solamente length y append, estos predicados toman 2 y 3 entradas respectivamente,
+pero ambos admiten que quede una variable sin instanciar (realmente, append puede tener 2 sin instanciar si así se quiere).
+Además, su uso no precisa un orden particular, cualquiera de sus entradas puede dejarse sin instanciar, mientras al menos una de las demás lo esté.
+por esto mismo, sublista funciona al derecho y al reves para los parametros Descartar y R. 
+Como dato adicional, Tomar también es reversible para R y Descartar.
+*/
 
 % tablero(+K, -T)
 tablero(K, T) :- generar_filas(5, K, T).
