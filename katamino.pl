@@ -23,12 +23,11 @@ verificarSubLista(L, N, R) :-
 */
 
 /*
-Es reversible, sigue logrando unificar correctamente si se cambia que variable es instanciada entre Descartar y R.
-Para hacer sublista, usamos solamente length y append, estos predicados toman 2 y 3 entradas respectivamente,
-pero ambos admiten que quede una variable sin instanciar (realmente, append puede tener 2 sin instanciar si así se quiere).
-Además, su uso no precisa un orden particular, cualquiera de sus entradas puede dejarse sin instanciar, mientras al menos una de las demás lo esté.
-por esto mismo, sublista funciona al derecho y al reves para los parametros Descartar y R. 
-Como dato adicional, Tomar también es reversible para R y Descartar.
+Es reversible: sigue logrando unificar correctamente si se cambia cuál de las variables entre Descartar y R está instanciada.
+Para construir la sublista, usamos únicamente los predicados length/2 y append/3. Estos tienen 2 y 3 argumentos respectivamente, y ambos admiten que uno (o incluso dos, en el caso de append/3) permanezcan sin instanciar.
+Además, pueden utilizarse sin requerir un orden específico: cualquiera de sus argumentos puede dejarse sin instanciar, siempre que haya suficiente información en los otros.
+Por esto mismo, sublista/4 funciona en ambos sentidos para los parámetros Descartar y R.
+Como dato adicional, el parámetro Tomar también puede no estar instanciado sin afectar la reversibilidad entre Descartar y R.
 */
 
 % tablero(+K, -T)
