@@ -96,7 +96,7 @@ recuperarLibre(T,ST) :- findall((X,Y),cordLibre(T,(X,Y)),ST).
 cordLibre(T, Coord) :- coordenadas(T, Coord), seccionTablero(T, 1, 1, Coord, [[Valor]]), var(Valor).
 
 
-tests :- test1, test2.
+tests :- test1, test2, test3.
 
 test1 :-    sublista(0, 0, [1], R1), R1 = [], 
             sublista(0, 0, [1,2,3], R2), R2 = [], 
@@ -108,6 +108,14 @@ test1 :-    sublista(0, 0, [1], R1), R1 = [],
 
 
 
-test2 :-    tablero(1, T1), T1 = [[_],[_],[_],[_],[_]],
-            tablero(2, T2), T2 = [[_,_],[_,_],[_,_],[_,_],[_,_]],
-            tablero(3, T3), T3 = [[_,_,_],[_,_,_],[_,_,_],[_,_,_],[_,_,_]].
+test2 :-    (tablero(1, T1), T1 = [[_],[_],[_],[_],[_]]),
+            (tablero(2, T2), T2 = [[_,_],[_,_],[_,_],[_,_],[_,_]]),
+            (tablero(3, T3), T3 = [[_,_,_],[_,_,_],[_,_,_],[_,_,_],[_,_,_]]).
+
+
+test3 :-    (tablero(3, T1), tamano(T1, F1, C1), F1 = 5, C1 = 3),
+            (pieza(e, E), tamano(E, F2, C2), F2 = 2, C2 = 3),
+            (pieza(a, A1), tamano(A1, F31, C31), F31 = 4, C31 = 2),
+            (pieza(a, A2), tamano(A2, F32, C32), F32 = 2, C32 = 4),
+            (tablero(2, T2), tamano(T2, F4, C4), F4 = 5, C4 = 2),
+            (tablero(1, T3), tamano(T3, F5, C5), F5 = 5, C5 = 1).
