@@ -1,25 +1,14 @@
 :- use_module(piezas).
 
 
-%insertar(?x,+L,?Lx).
-insertar(X,L,Lx) :- append(P,S,L), append(P,[X|S],Lx).
-
 %sublista(+Descartar, +Tomar, +L, -R).
-sublista(Descartar, Tomar, L, R) :- 
- append(ElemsDescartar, ElemsPosibles, L), 
- length(ElemsDescartar, Descartar), 
- append(R, _, ElemsPosibles), 
- length(R, Tomar).
-
-
-%sublista(+Descartar, +Tomar, +L, -R).
-sublista1(Descartar, Tomar, L, R) :-  verificarSubLista(_, ElemsPosibles, Descartar, L), verificarSubLista(R, _, Tomar, ElemsPosibles).
+sublista(Descartar, Tomar, L, R) :-  verificarSubLista(_, ElemsPosibles, Descartar, L), verificarSubLista(R, _, Tomar, ElemsPosibles).
 
 verificarSubLista(L1, L2, N, L) :- append(L1, L2, L), length(L1, N).
 
 /*
 Es reversible: sigue logrando unificar correctamente si se cambia cuál de las variables entre Descartar y R está instanciada.
-Para construir la sublista, usamos únicamente los predicados length/2 y append/3. Estos tienen 2 y 3 argumentos respectivamente, y ambos admiten que uno (o incluso dos, en el caso de append/3) permanezcan sin instanciar.
+Para construir la sublista, usamos únicamente los predicados length/2 y append/3 dentro de verificarSubLista. Estos tienen 2 y 3 argumentos respectivamente, y ambos admiten que uno (o incluso dos, en el caso de append/3) permanezcan sin instanciar.
 Además, pueden utilizarse sin requerir un orden específico: cualquiera de sus argumentos puede dejarse sin instanciar, siempre que haya suficiente información en los otros.
 Por esto mismo, sublista/4 funciona en ambos sentidos para los parámetros Descartar y R.
 Como dato adicional, el parámetro Tomar también puede no estar instanciado sin afectar la reversibilidad entre Descartar y R.
@@ -31,32 +20,18 @@ tablero(K, T) :- generar_filas(5, K, T).
 %generar_filas(+Filas, +Columnas, -Tablero)
 generar_filas(0, _, []).
 generar_filas(N, K, [Fila|Resto]) :-
-    N > 0,
+    K > 0,
     length(Fila, K),         % Fila con K variables distintas
     N1 is N - 1,
     generar_filas(N1, K, Resto).
  
+
 %tamano(+M, -F, -C)
-tamano([E|M], F, C) :- length(E,C), length([E|M],F).
+tamano([Fila|Resto], F, C) :- length(Fila,C), length([Fila|Resto],F).
+
 
 %coordenadas(+T, -IJ)
-%coordenadas([],IJ).
-% (1,1) (1,2) (1,3) (1,4) 
-% (2,1) (2,2) (2,3) (2,4)
-% (3,1) (3,2) (3,3) (3,4)
-% (4,1) (4,2) (4,3) (4,4)
-% (5,1) (5,2) (5,3) (5,4)
-/*
-coordenadas([[T|F]|TS], (I,J)) :- length([T|F],I), 
-                                  length([[T|F]|TS],J),
-                                  between(1, NEWI, I),
-                                  between(1, NEWJ, J).
-*/
-%coordenadas(+Tablero, -Coordenada)
-coordenadas([[T|F]|TS], (I, J)) :-length([[T|F]|TS], NEWI),
-                                  length([T|F], NEWJ),
-                                  between(1, NEWI, I),
-                                  between(1, NEWJ, J).
+coordenadas(Matriz, (I, J)) :- tamano(Matriz, F, C), between(1, F, I), between(1, C, J).
 
 
 
