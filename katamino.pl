@@ -5,22 +5,17 @@
 insertar(X,L,Lx) :- append(P,S,L), append(P,[X|S],Lx).
 
 %sublista(+Descartar, +Tomar, +L, -R).
-%sublista(_,_,[],[]).
-sublista(Desc2,Tomar2,L2,R2) :- 
- length(L2,LenL2),
- append(Noquiero,Ele2,L2), 
- length(Noquiero, Desc2), 
- LenEspEle2 is (LenL2 - Desc2), 
- length(Ele2, LenEspEle2), 
- append(R2,_,Ele2), 
- length(R2,Tomar2).
+sublista(Descartar, Tomar, L, R) :- 
+ append(ElemsDescartar, ElemsPosibles, L), 
+ length(ElemsDescartar, Descartar), 
+ append(R, _, ElemsPosibles), 
+ length(R, Tomar).
 
-/*
+
 %sublista(+Descartar, +Tomar, +L, -R).
-sublista(Descartar, Tomar, L, R) :- verificarSubLista(L, Descartar, ElemsPosibles), 
-                                    verificarSubLista(ElemsPosibles, Tomar, R).
-verificarSubLista(L, N, R) :-
-*/
+sublista1(Descartar, Tomar, L, R) :-  verificarSubLista(_, ElemsPosibles, Descartar, L), verificarSubLista(R, _, Tomar, ElemsPosibles).
+
+verificarSubLista(L1, L2, N, L) :- append(L1, L2, L), length(L1, N).
 
 /*
 Es reversible: sigue logrando unificar correctamente si se cambia cuál de las variables entre Descartar y R está instanciada.
