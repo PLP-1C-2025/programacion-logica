@@ -20,7 +20,7 @@ tablero(K, T) :- generar_filas(5, K, T).
 %generar_filas(+Filas, +Columnas, -Tablero)
 generar_filas(0, _, []).
 generar_filas(N, K, [Fila|Resto]) :-
-    K > 0,
+    N > 0,
     length(Fila, K),         % Fila con K variables distintas
     N1 is N - 1,
     generar_filas(N1, K, Resto).
@@ -34,34 +34,16 @@ tamano([Fila|Resto], F, C) :- length(Fila,C), length([Fila|Resto],F).
 coordenadas(Matriz, (I, J)) :- tamano(Matriz, F, C), between(1, F, I), between(1, C, J).
 
 
-
-/*Predicados: =, sort, msort, length, nth1, nth0, member, append, last,
- between, is_list, list_to_set, is_set, union, intersection, subset, subtract, select, delete, reverse, atom, number, numlist, sum_list, flatten
-
-kPiezas(K, PS) :- .
-%quiero todos los subconjuntos del conjunto de longitud k, todas las permutaciones distintas de longitud k
-%kpiezas(+K, -PS)
-piezas(K,PS) :- 
- */
-
-/*
-nombrePiezas(L), length(PS,K), append([A],L1,L),
-                not(member(A, L1)), member(A,PS).
-
-piezas(K,PS) :- append (Algo,_,ListaK), length (ListaK, K), [a, b, c, d, e, f, g, h, i, j, k, l] 
-length(PS,K),
-*/
-
 combinar(0, _, []).
 combinar(K, [X|XS], [X|YS]) :- K > 0, NEWK is K-1, combinar(NEWK, XS, YS). % En este si
 combinar(K, [_|XS], YS) :- K > 0, combinar(K, XS, YS). % Este es el caso en el que no agarro nada
 
+%kPiezas(+K, -PS)
 kPiezas(K,PS) :- nombrePiezas(L), combinar(K, L, PS).
 
 %seccionTablero(+T, +ALTO, +ANCHO, +IJ, ?ST)
-
 seccionTablero(T, ALTO, ANCHO, (I,J), ST) :- NEWI is I - 1, NEWJ is J - 1,
-                                             sublista(NEWI, ALTO, T, R), columnasValidas(NEWJ, ANCHO, R, SOLUCION), ST = SOLUCION.
+                                             sublista(NEWI, ALTO, T, R), columnasValidas(NEWJ, ANCHO, R, ST).
 
 columnasValidas(_, _, [], []).
 columnasValidas(J, ANCHO, [F|R], SOLUCION) :- sublista(J, ANCHO, F, FRES), 
@@ -69,7 +51,7 @@ columnasValidas(J, ANCHO, [F|R], SOLUCION) :- sublista(J, ANCHO, F, FRES),
                                                columnasValidas(J,ANCHO,R,RF).
 
 %ubicarPieza(+Tablero, +Identificador)
-ubicarPieza(Tablero, Identificador) :- pieza(Identificador, E), tamano(E, F, C),coordenadas(Tablero,(X,Y)), seccionTablero(Tablero, F, C, (X,Y), E).
+ubicarPieza(Tablero, Identificador) :- pieza(Identificador, E), tamano(E, F, C), coordenadas(Tablero, Coord), seccionTablero(Tablero, F, C, Coord, E).
 
 %poda(+P, +T)
 poda(sinPoda, _).
@@ -77,14 +59,13 @@ poda(podaMod5, T) :- todosGruposLibresModulo5(T).
 
 %ubicarPiezas(+Tablero, +Poda, +Identificadores)
 ubicarPiezas(_, _, []).
-ubicarPiezas(Tablero, Poda, [I|Identificadores]) :- poda(Poda, Tablero), ubicarPieza(Tablero,I), ubicarPiezas(Tablero, Poda, Identificadores).
+ubicarPiezas(Tablero, Poda, [I|Identificadores]) :- poda(Poda, Tablero), ubicarPieza(Tablero, I), ubicarPiezas(Tablero, Poda, Identificadores).
 
 %llenarTablero(+Poda, +Columnas, -Tablero)
 llenarTablero(Poda, Columnas, Tablero) :- tablero(Columnas, Tablero), kPiezas(Columnas, PiezasPosibles), ubicarPiezas(Tablero, Poda, PiezasPosibles).
 
-cantSoluciones(Poda, Columnas, N) :-
-findall(T, llenarTablero(Poda, Columnas, T), TS),
-length(TS, N).
+%cantSoluciones(+Poda, +Columnas, -N)
+cantSoluciones(Poda, Columnas, N) :- findall(T, llenarTablero(Poda, Columnas, T), TS), length(TS, N).
 
 % MAQUINA VIRTUAL
 % time(cantSoluciones(sinPoda, 3, N)).
@@ -96,14 +77,13 @@ length(TS, N).
 % N = 200.
 
 %todosGruposLibresModulo5(+T)
-%todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), not((member(X,G), length(X,L), mod(L, 5) \= 0)).
-todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), forall(member(X,G), moduloCinco(X)). % A REVISAR
+todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), forall(member(Lista,G), moduloCinco(Lista)). % A REVISAR
 
-moduloCinco(X) :- length(X,L), mod(L, 5) =:= 0.
+moduloCinco(Lista) :- length(Lista, Ls), mod(Ls, 5) =:= 0.
 
 % MAQUINA VIRTUAL
 % ?- time(cantSoluciones(podaMod5, 3, N)).
-% 30,298,534 inferences, 1.839 CPU in 1.826 seconds (101% CPU, 16479418 Lips)  -- 101 CPU!?!?!?!?!?!?!?!?!?!
+% 30,298,534 inferences, 1.839 CPU in 1.826 seconds (101% CPU, 16479418 Lips)  -- 101 CPU!?!?!?!?!?
 % N = 28.
 
 % ?- time(cantSoluciones(podaMod5, 4, N)).
@@ -112,5 +92,5 @@ moduloCinco(X) :- length(X,L), mod(L, 5) =:= 0.
 
 recuperarLibre(T,ST) :- findall((X,Y),cordLibre(T,(X,Y)),ST).
 
-%cordLibre(+T,+(I,J))
-cordLibre(T,(I,J)) :- coordenadas(T, (I,J)), seccionTablero(T,1,1,(I,J),[[Valor]]), var(Valor).
+%cordLibre(+T,?(I,J))
+cordLibre(T, Coord) :- coordenadas(T, Coord), seccionTablero(T, 1, 1, Coord, [[Valor]]), var(Valor).
