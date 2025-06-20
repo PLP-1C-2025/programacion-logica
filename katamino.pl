@@ -137,4 +137,9 @@ test(5) :-  kPiezas(2, [a,b]),
             (kPiezas(1, Piezas), Piezas = [a]).
 
 
-test(6) :-  
+test(6) :-
+    tablero(3, T),
+    seccionTablero(T, 3, 2, (1,2), ST),
+    ST = [[_C12,_C13],
+          [_C22,_C23],
+          [_C32,_C33]].
