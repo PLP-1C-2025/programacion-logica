@@ -97,7 +97,7 @@ recuperarLibre(T,ST) :- findall((X,Y),cordLibre(T,(X,Y)),ST).
 %cordLibre(+T,?(I,J))
 cordLibre(T, Coord) :- coordenadas(T, Coord), seccionTablero(T, 1, 1, Coord, [[Valor]]), var(Valor).
 
-tests :- forall(between(1,6, N), test(N)).
+tests :- forall(between(1,9, N), test(N)).
 
 test(1) :-  sublista(0, 0, [1], R1), R1 = [], 
             sublista(0, 0, [1,2,3], R2), R2 = [], 
@@ -140,17 +140,16 @@ test(5) :-  kPiezas(2, [a,b]),
 test(6) :-
     tablero(3, T),
     seccionTablero(T, 3, 2, (1,2), ST),
-    ST = [[_C12,_C13],
-          [_C22,_C23],
-          [_C32,_C33]],
+    ST = [[_,_],
+          [_,_],
+          [_,_]],
     seccionTablero(T, 2, 2, (2,1), ST2),
-    ST2 = [[_C21,_C22],
-           [_C31,_C32]].
+    ST2 = [[_,_],
+           [_,_]].
 
 
 test(7) :-
     tablero(3, T),
-    pieza(e, E),
     ubicarPieza(T, e),
     T = [[_,e,e],
          [e,e,e],
@@ -164,7 +163,7 @@ test(7) :-
          [_,_,_],
          [_,_,_]].
 
-    test(8) :- tablero(3, T),
+test(8) :- tablero(3, T),
             tablero(3,T1),
             ubicarPiezas(T, sinPoda, [e, j]),
             T = [[_,e,e],
@@ -179,7 +178,7 @@ test(7) :-
                     [a,_,b],
                     [_,_,_]].
 
-    test(9) :- llenarTablero(sinPoda, 3, T),
+test(9) :- llenarTablero(sinPoda, 3, T),
             T = [[a,a,b],
                     [a,b,b],
                     [a,h,b],
