@@ -142,4 +142,46 @@ test(6) :-
     seccionTablero(T, 3, 2, (1,2), ST),
     ST = [[_C12,_C13],
           [_C22,_C23],
-          [_C32,_C33]].
+          [_C32,_C33]],
+    seccionTablero(T, 2, 2, (2,1), ST2),
+    ST2 = [[_C21,_C22],
+           [_C31,_C32]].
+
+
+test(7) :-
+    tablero(3, T),
+    pieza(e, E),
+    ubicarPieza(T, e),
+    T = [[_,e,e],
+         [e,e,e],
+         [_,_,_],
+         [_,_,_],
+         [_,_,_]],
+    ubicarPieza(T,e),
+    T = [[_,_,_],
+         [_,e,e],
+         [e,e,e],
+         [_,_,_],
+         [_,_,_]].
+
+    test(8) :- tablero(3, T),
+            tablero(3,T1),
+            ubicarPiezas(T, sinPoda, [e, j]),
+            T = [[_,e,e],
+                    [e,e,e],
+                    [_,_,j],
+                    [_,j,j],
+                    [j,j,_]],
+                ubicarPiezas(T1, sinPoda, [a,b]),
+                T1 = [[a,a,b],
+                    [a,_,b],
+                    [a,b,b],
+                    [a,_,b],
+                    [_,_,_]].
+
+    test(9) :- llenarTablero(sinPoda, 3, T),
+            T = [[a,a,b],
+                    [a,b,b],
+                    [a,h,b],
+                    [a,h,b],
+                    [h,h,h]].
