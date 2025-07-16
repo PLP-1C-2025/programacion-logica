@@ -8,8 +8,7 @@ sublista(Descartar, Tomar, L, R) :-  append(ElemsADescartar, ElemsPosibles, L),
                                      length(R, Tomar).
 
 %verificarSubLista(_, ElemsPosibles, Descartar, L), verificarSubLista(R, _, Tomar, ElemsPosibles).
-
-verificarSubLista(L1, L2, N, L) :- append(L1, L2, L), length(L1, N).
+%verificarSubLista(L1, L2, N, L) :- append(L1, L2, L), length(L1, N).
 
 /*
 Es reversible: sigue logrando unificar correctamente si se cambia cuál de las variables entre Descartar y R está instanciada.
@@ -19,16 +18,20 @@ Por esto mismo, sublista/4 funciona en ambos sentidos para los parámetros Desca
 Como dato adicional, el parámetro Tomar también puede no estar instanciado sin afectar la reversibilidad entre Descartar y R.
 */
 
-% tablero(+K, -T)
-tablero(K, T) :- generar_filas(5, K, T).
+%long(+K, -L)
+long(K, L) :- length(L, K).
 
+%tablero(+K, -T)
+tablero(K,T) :- length(T, 5), maplist(long(K), T).
+
+%tablero(K, T) :- generar_filas(5, K, T).
 %generar_filas(+Filas, +Columnas, -Tablero)
-generar_filas(0, _, []).
-generar_filas(N, K, [Fila|Resto]) :-
-    N > 0,
-    length(Fila, K),         % Fila con K variables distintas
-    N1 is N - 1,
-    generar_filas(N1, K, Resto).
+%generar_filas(0, _, []).
+%generar_filas(N, K, [Fila|Resto]) :-
+%    N > 0,
+%    length(Fila, K),         % Fila con K variables distintas
+%    N1 is N - 1,
+%    generar_filas(N1, K, Resto).
  
 
 %tamano(+M, -F, -C)
@@ -38,8 +41,8 @@ tamano([Fila|Resto], F, C) :- length(Fila,C), length([Fila|Resto],F).
 %coordenadas(+T, -IJ)
 coordenadas(Matriz, (I, J)) :- tamano(Matriz, F, C), between(1, F, I), between(1, C, J).
 
-
-combinar(0, _, []).
+%combinar(+K, +L, -PS)
+combinar(0, _, []) :- !.
 combinar(K, [X|XS], [X|YS]) :- K > 0, NEWK is K-1, combinar(NEWK, XS, YS). % En este si
 combinar(K, [_|XS], YS) :- K > 0, combinar(K, XS, YS). % Este es el caso en el que no agarro nada
 
@@ -47,12 +50,16 @@ combinar(K, [_|XS], YS) :- K > 0, combinar(K, XS, YS). % Este es el caso en el q
 kPiezas(K,PS) :- nombrePiezas(L), combinar(K, L, PS).
 
 %seccionTablero(+T, +ALTO, +ANCHO, +IJ, ?ST)
-seccionTablero(T, ALTO, ANCHO, (I,J), ST) :- NEWI is I - 1, NEWJ is J - 1,
-                                             sublista(NEWI, ALTO, T, R), columnasValidas(NEWJ, ANCHO, R, ST).
+seccionTablero(T, ALTO, ANCHO, (I,J), ST) :-
+    NEWI is I - 1,
+    NEWJ is J - 1,
+    sublista(NEWI, ALTO, T, R),
+    maplist(sublista(NEWJ, ANCHO), R, ST).
+                                             
+%columnasValidas(NEWJ, ANCHO, R, ST).
 
 columnasValidas(_, _, [], []).
-columnasValidas(J, ANCHO, [F|R], SOLUCION) :- sublista(J, ANCHO, F, FRES), 
-                                               append([FRES], RF, SOLUCION), 
+columnasValidas(J, ANCHO, [F|R], [FRES|RF]) :- sublista(J, ANCHO, F, FRES),
                                                columnasValidas(J,ANCHO,R,RF).
 
 %ubicarPieza(+Tablero, +Identificador)
@@ -64,7 +71,7 @@ poda(podaMod5, T) :- todosGruposLibresModulo5(T).
 
 %ubicarPiezas(+Tablero, +Poda, +Identificadores)
 ubicarPiezas(_, _, []).
-ubicarPiezas(Tablero, Poda, [I|Identificadores]) :- poda(Poda, Tablero), ubicarPieza(Tablero, I), ubicarPiezas(Tablero, Poda, Identificadores).
+ubicarPiezas(Tablero, Poda, [I|Identificadores]) :- ubicarPieza(Tablero, I), poda(Poda, Tablero), ubicarPiezas(Tablero, Poda, Identificadores).
 
 %llenarTablero(+Poda, +Columnas, -Tablero)
 llenarTablero(Poda, Columnas, Tablero) :- tablero(Columnas, Tablero), kPiezas(Columnas, PiezasPosibles), ubicarPiezas(Tablero, Poda, PiezasPosibles).
@@ -82,7 +89,7 @@ cantSoluciones(Poda, Columnas, N) :- findall(T, llenarTablero(Poda, Columnas, T)
 % N = 200.
 
 %todosGruposLibresModulo5(+T)
-todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), forall(member(Lista,G), moduloCinco(Lista)). % A REVISAR
+todosGruposLibresModulo5(T) :- recuperarLibre(T, ST), agrupar(ST, G), forall(member(Lista,G), moduloCinco(Lista)). 
 
 %moduloCinco(+Lista)
 moduloCinco(Lista) :- length(Lista, Ls), mod(Ls, 5) =:= 0.
@@ -100,7 +107,7 @@ moduloCinco(Lista) :- length(Lista, Ls), mod(Ls, 5) =:= 0.
 recuperarLibre(T,ST) :- findall((X,Y),cordLibre(T,(X,Y)),ST).
 
 %cordLibre(+T,?(I,J))
-cordLibre(T, Coord) :- coordenadas(T, Coord), seccionTablero(T, 1, 1, Coord, [[Valor]]), var(Valor).
+cordLibre(T, (I,J)) :- coordenadas(T, (I,J)), nth1(I, T, R), nth1(J, R, Valor), var(Valor).
 
 tests :- forall(between(1,9, N), test(N)).
 
