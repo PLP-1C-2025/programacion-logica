@@ -2,7 +2,12 @@
 
 
 %sublista(+Descartar, +Tomar, +L, -R).
-sublista(Descartar, Tomar, L, R) :-  verificarSubLista(_, ElemsPosibles, Descartar, L), verificarSubLista(R, _, Tomar, ElemsPosibles).
+sublista(Descartar, Tomar, L, R) :-  append(ElemsADescartar, ElemsPosibles, L), 
+                                     append(R, _, ElemsPosibles),
+                                     length(ElemsADescartar, Descartar),
+                                     length(R, Tomar).
+
+%verificarSubLista(_, ElemsPosibles, Descartar, L), verificarSubLista(R, _, Tomar, ElemsPosibles).
 
 verificarSubLista(L1, L2, N, L) :- append(L1, L2, L), length(L1, N).
 
