@@ -7,44 +7,33 @@ sublista(Descartar, Tomar, L, R) :-  append(ElemsADescartar, ElemsPosibles, L),
                                      length(ElemsADescartar, Descartar),
                                      length(R, Tomar).
 
-%verificarSubLista(_, ElemsPosibles, Descartar, L), verificarSubLista(R, _, Tomar, ElemsPosibles).
-%verificarSubLista(L1, L2, N, L) :- append(L1, L2, L), length(L1, N).
-
 /*
-Es reversible: sigue logrando unificar correctamente si se cambia cuál de las variables entre Descartar y R está instanciada.
-Para construir la sublista, usamos únicamente los predicados length/2 y append/3 dentro de verificarSubLista. Estos tienen 2 y 3 argumentos respectivamente, y ambos admiten que uno (o incluso dos, en el caso de append/3) permanezcan sin instanciar.
-Además, pueden utilizarse sin requerir un orden específico: cualquiera de sus argumentos puede dejarse sin instanciar, siempre que haya suficiente información en los otros.
-Por esto mismo, sublista/4 funciona en ambos sentidos para los parámetros Descartar y R.
-Como dato adicional, el parámetro Tomar también puede no estar instanciado sin afectar la reversibilidad entre Descartar y R.
+sublista(-Descartar, +Tomar, +L, +R)
+
+Es reversible porque:
+Cuando R esta instanciada y Descartar no, Si R es una sublista de ElemsPosibles de tamaño Tomar, que a su vez es sublista de L, 
+entonces ElemsADescartar se va a instanciar de un tamaño fijo, pues solo hay una sublista tal que, junto a ElemsPosibles formen L. Luego, Descartar se va a instanciar con la longitud de ElemsADescartar. 
+Si R es una sublista de tamaño Tomar de ElemsPosibles, va a fallar en el length(R, Tomar).
+Si R es una lista de tamaño Tomar pero no es una sublista de ElemsPosibles, entonces va a fallar en el append(R, _, ElemsPosibles). 
+
 */
 
-%long(+K, -L)
-long(K, L) :- length(L, K).
+%invertedLength(+K, -L)
+invertedLength(K, L) :- length(L, K).
 
 %tablero(+K, -T)
-tablero(K,T) :- length(T, 5), maplist(long(K), T).
-
-%tablero(K, T) :- generar_filas(5, K, T).
-%generar_filas(+Filas, +Columnas, -Tablero)
-%generar_filas(0, _, []).
-%generar_filas(N, K, [Fila|Resto]) :-
-%    N > 0,
-%    length(Fila, K),         % Fila con K variables distintas
-%    N1 is N - 1,
-%    generar_filas(N1, K, Resto).
- 
+tablero(K,T) :- length(T, 5), maplist(invertedLength(K), T).
 
 %tamano(+M, -F, -C)
 tamano([Fila|Resto], F, C) :- length(Fila,C), length([Fila|Resto],F).
-
 
 %coordenadas(+T, -IJ)
 coordenadas(Matriz, (I, J)) :- tamano(Matriz, F, C), between(1, F, I), between(1, C, J).
 
 %combinar(+K, +L, -PS)
-combinar(0, _, []) :- !.
-combinar(K, [X|XS], [X|YS]) :- K > 0, NEWK is K-1, combinar(NEWK, XS, YS). % En este si
-combinar(K, [_|XS], YS) :- K > 0, combinar(K, XS, YS). % Este es el caso en el que no agarro nada
+combinar(0, _, []).
+combinar(K, [X|XS], [X|YS]) :- K > 0, length(XS, N), NEWK is K-1, N >= NEWK, combinar(NEWK, XS, YS).
+combinar(K, [_|XS], YS) :- K > 0, length(XS, N), N >= K, combinar(K, XS, YS). 
 
 %kPiezas(+K, -PS)
 kPiezas(K,PS) :- nombrePiezas(L), combinar(K, L, PS).
